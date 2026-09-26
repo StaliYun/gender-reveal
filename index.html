@@ -43,10 +43,9 @@
         .btn-container {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            position: relative;
-            height: 80px;
             align-items: center;
+            gap: 40px;
+            min-height: 80px;
         }
 
         .btn {
@@ -58,6 +57,7 @@
             cursor: pointer;
             color: white;
             transition: 0.2s;
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -70,7 +70,6 @@
 
         .btn-girl {
             background: #ec4899;
-            position: absolute;
         }
 
         .success-message {
@@ -126,7 +125,10 @@ const boyBtn = document.getElementById("boyBtn");
 const successMsg = document.getElementById("successMsg");
 const gameTitle = document.getElementById("gameTitle");
 
+let isMoving = false;
+
 document.addEventListener("mousemove", (e) => {
+
     const rect = girlBtn.getBoundingClientRect();
 
     const centerX = rect.left + rect.width / 2;
@@ -138,6 +140,12 @@ document.addEventListener("mousemove", (e) => {
     );
 
     if (distance < 150) {
+
+        if (!isMoving) {
+            girlBtn.style.position = "fixed";
+            isMoving = true;
+        }
+
         const padding = 50;
 
         const x =
@@ -150,7 +158,6 @@ document.addEventListener("mousemove", (e) => {
                 (window.innerHeight - rect.height - padding * 2) +
             padding;
 
-        girlBtn.style.position = "fixed";
         girlBtn.style.left = `${x}px`;
         girlBtn.style.top = `${y}px`;
     }
@@ -161,6 +168,7 @@ girlBtn.addEventListener("click", () => {
 });
 
 boyBtn.addEventListener("click", () => {
+
     boyBtn.style.display = "none";
     girlBtn.style.display = "none";
     gameTitle.style.display = "none";
@@ -211,6 +219,7 @@ class Particle {
 }
 
 function createExplosion(x, y) {
+
     const colors = [
         "#1d4ed8",
         "#2563eb",
@@ -221,6 +230,7 @@ function createExplosion(x, y) {
     ];
 
     for (let i = 0; i < 70; i++) {
+
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 5 + 2;
 
@@ -237,12 +247,13 @@ function createExplosion(x, y) {
 }
 
 function animate() {
+
     ctx.fillStyle = "rgba(255,255,255,0.15)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    particles = particles.filter((p) => p.life > 0);
+    particles = particles.filter(p => p.life > 0);
 
-    particles.forEach((p) => {
+    particles.forEach(p => {
         p.update();
         p.draw();
     });
@@ -251,15 +262,23 @@ function animate() {
 }
 
 function startFireworks() {
+
     setInterval(() => {
+
         createExplosion(
             Math.random() * canvas.width,
             Math.random() * canvas.height * 0.6
         );
+
     }, 400);
 
     window.addEventListener("click", (e) => {
-        createExplosion(e.clientX, e.clientY);
+
+        createExplosion(
+            e.clientX,
+            e.clientY
+        );
+
     });
 }
 
